@@ -112,7 +112,6 @@ This ensures tests remain **stable and reliable**, especially when validating up
 
 * Introduce logging/reporting
 * Expand test coverage (negative scenarios, edge cases)
-* Add contract/schema validation
 
 ---
 

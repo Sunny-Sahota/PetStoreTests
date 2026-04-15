@@ -6,6 +6,7 @@ namespace PetStoreTests.Utilities
 {
     public static class ApiAssertions
     {
+        // Shared helpers (Assertions)
         public static void ShouldBeOk(RestResponse response)
         {
             response.StatusCode.Should().Be(HttpStatusCode.OK);

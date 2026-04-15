@@ -5,6 +5,7 @@ namespace PetStoreTests.Clients
 {
     public class PetClient
     {
+        // Raw HTTP communication
         private readonly RestClient _restClient;
 
         public PetClient()

@@ -4,7 +4,7 @@ namespace PetStoreTests.Helpers
 {
     public class TestDataFactory
     {
-        // Create Test data objects
+        // Test data creation
         public static Pet CreatePet()
         {
             return new Pet

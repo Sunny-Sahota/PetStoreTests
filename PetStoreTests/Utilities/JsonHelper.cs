@@ -4,6 +4,7 @@ namespace PetStoreTests.Utilities
 {
     public static class JsonHelper
     {
+        // Shared helpers (JSON)
         public static T DeserializeOrThrow<T>(string? content)
         {
             if (string.IsNullOrEmpty(content))

@@ -7,30 +7,27 @@ namespace PetStoreTests.Services
 {
     public class PetService
     {
+        // Business logic / polling
         private readonly PetClient _petClient;
 
         public PetService(PetClient petClient)
         {
-            _petClient = petClient ?? throw new ArgumentNullException(nameof(petClient));
+            _petClient = petClient;
         }
 
         public Pet WaitForPetNameToBe(long id, string expectedName)
         {
+            // Added null forgiving '!' for compiler since im checking null in condition that passes into retry helper
             return RetryHelper.RetryUntil(
                 action: () =>
                 {
                     var response = _petClient.GetPetById(id);
-
-                    if (string.IsNullOrEmpty(response.Content))
-                        return null;
-
-                    var pet = JsonConvert.DeserializeObject<Pet>(response.Content);
-
-                    return pet?.Name == expectedName ? pet : null;
+                    return JsonConvert.DeserializeObject<Pet>(response.Content!);
                 },
+                condition: pet => pet != null && pet.Name == expectedName,
                 retries: 10,
                 delayMs: 500
-            ) ?? throw new Exception($"Pet with id {id} was not updated to '{expectedName}'");
+            )!;
         }
     }
 }

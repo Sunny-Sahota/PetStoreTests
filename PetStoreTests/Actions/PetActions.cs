@@ -12,7 +12,7 @@ namespace PetStoreTests.Actions
 
         public PetActions(PetClient petClient)
         {
-            _petClient = petClient;
+            _petClient = petClient ?? throw new ArgumentNullException(nameof(petClient));
         }
 
         public Pet CreatePet(Pet pet)

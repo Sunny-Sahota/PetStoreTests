@@ -12,7 +12,7 @@ namespace PetStoreTests.Services
 
         public PetService(PetClient petClient)
         {
-            _petClient = petClient;
+            _petClient = petClient ?? throw new ArgumentNullException(nameof(petClient));
         }
 
         public Pet WaitForPetNameToBe(long id, string expectedName)

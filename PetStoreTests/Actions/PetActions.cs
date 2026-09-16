@@ -19,7 +19,8 @@ namespace PetStoreTests.Actions
         {
             var response = RetryHelper.RetryUntil(
                 action: () => _petClient.PostPet(pet),
-                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content)
+                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content),
+                context: $"POST /pet (id: {pet.Id})"
             );
             return JsonHelper.DeserializeOrThrow<Pet>(response.Content);
         }
@@ -28,7 +29,8 @@ namespace PetStoreTests.Actions
         {
             var response = RetryHelper.RetryUntil(
                 action: () => _petClient.GetPetById(id),
-                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content)
+                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content),
+                context: $"GET/pet/{id}"
             );
             return JsonHelper.DeserializeOrThrow<Pet>(response.Content);
         }

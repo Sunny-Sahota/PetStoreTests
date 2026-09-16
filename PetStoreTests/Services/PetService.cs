@@ -26,7 +26,8 @@ namespace PetStoreTests.Services
                 },
                 condition: pet => pet != null && pet.Name == expectedName,
                 retries: 10,
-                delayMs: 500
+                delayMs: 500,
+                context: $"GET /pet/{id} - waiting for pet name to be '{expectedName}'"
             )!;
         }
     }

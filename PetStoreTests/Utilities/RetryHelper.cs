@@ -10,7 +10,8 @@ namespace PetStoreTests.Utilities
         Func<T> action,
         Func<T, bool> condition,
         int retries = 5,
-        int delayMs = 500)
+        int delayMs = 500,
+        string? context = null)
         {
             for (int i = 0; i < retries; i++)
             {
@@ -22,7 +23,11 @@ namespace PetStoreTests.Utilities
                 Thread.Sleep(delayMs);
             }
 
-            throw new Exception("Retry condition was not met within the allowed attempts.");
+            var message = string.IsNullOrEmpty(context)
+                ? $"Retry condition was not met after {retries} attempts (delay: {delayMs})."
+                : $"Retry condition was not met after {retries} attempts (delay: {delayMs}). Context: {context}";
+            
+            throw new InvalidOperationException(message);
         }
     }
 }

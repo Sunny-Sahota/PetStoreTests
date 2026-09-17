@@ -30,5 +30,7 @@ namespace PetStoreTests.Clients
         public RestResponse PutPet(object body) => Execute("/pet", Method.Put, body);
 
         public RestResponse DeletePet(long id) => Execute($"/pet/{id}", Method.Delete);
+
+        public RestResponse FindByStatus(string status) => Execute($"/pet/findByStatus?status={status}", Method.Get);
     }
 }

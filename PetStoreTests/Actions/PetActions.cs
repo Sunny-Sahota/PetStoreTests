@@ -34,5 +34,11 @@ namespace PetStoreTests.Actions
             );
             return JsonHelper.DeserializeOrThrow<Pet>(response.Content);
         }
+
+        public List<Pet> FindByStatus(string status)
+        {
+            var response = _petClient.FindByStatus(status);
+            return JsonHelper.DeserializeOrThrow<List<Pet>>(response.Content);
+        }
     }
 }

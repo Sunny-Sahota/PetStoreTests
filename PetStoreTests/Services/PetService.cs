@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using PetStoreTests.Clients;
+﻿using PetStoreTests.Clients;
 using PetStoreTests.Models;
 using PetStoreTests.Utilities;
 
@@ -17,13 +16,9 @@ namespace PetStoreTests.Services
 
         public Pet WaitForPetNameToBe(long id, string expectedName)
         {
-            // Added null forgiving '!' for compiler since im checking null in condition that passes into retry helper
+            // Polls GET /pet/{id} until the returned pet's name matches (eventual consistency)
             return RetryHelper.RetryUntil(
-                action: () =>
-                {
-                    var response = _petClient.GetPetById(id);
-                    return JsonConvert.DeserializeObject<Pet>(response.Content!);
-                },
+                action: () => JsonHelper.DeserializeOrThrow<Pet>(_petClient.GetPetById(id).Content),
                 condition: pet => pet != null && pet.Name == expectedName,
                 retries: 10,
                 delayMs: 500,

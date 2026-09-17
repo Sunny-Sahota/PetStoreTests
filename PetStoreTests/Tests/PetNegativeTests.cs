@@ -1,15 +1,13 @@
 using FluentAssertions;
-using PetStoreTests.Actions;
 using PetStoreTests.Clients;
-using PetStoreTests.Helpers;
-using PetStoreTests.Models;
 using System.Net;
 namespace PetStoreTests.Tests
 {
-    public class PetNegativeTests
+    public class PetNegativeTests : IDisposable
     {
         private readonly PetClient _petClient = new();
-        private readonly PetActions _petAction = new(new PetClient());
+
+        public PetNegativeTests() { }
 
         [Fact]
         [Trait("Category","Negative")]
@@ -22,5 +20,7 @@ namespace PetStoreTests.Tests
             //  ASSERT
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+
+        public void Dispose() => _petClient.Dispose();
     }
 }

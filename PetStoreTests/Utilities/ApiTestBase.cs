@@ -20,6 +20,7 @@ namespace PetStoreTests.Utilities
             {
                 PetClient.DeletePet(id);
             }
+            PetClient.Dispose();
             return Task.CompletedTask;
         }
     }

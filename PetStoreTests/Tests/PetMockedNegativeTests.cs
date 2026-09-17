@@ -2,13 +2,16 @@ using FluentAssertions;
 using PetStoreTests.Actions;
 using PetStoreTests.Clients;
 using PetStoreTests.Helpers;
+using PetStoreTests.Models;
 using System.Net;
 
 
 namespace PetStoreTests.Tests
 {
-    public class PetMockedNegativeTests : IClassFixture<WireMockFixture>
+    public class PetMockedNegativeTests : IClassFixture<WireMockFixture>, IDisposable
     {
+        private const string InvalidStatus = "bogus";
+
         private readonly PetClient _petClient;
         private readonly PetActions _petAction;
 
@@ -71,7 +74,7 @@ namespace PetStoreTests.Tests
         [Trait("Category","Negative")]
         public void FindByStatus_InvalidStatus_ShouldReturn400()
         {
-            var response = _petClient.FindByStatus("bogus");
+            var response = _petClient.FindByStatus(InvalidStatus);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -80,7 +83,7 @@ namespace PetStoreTests.Tests
         [Trait("Category","Negative")]
         public void FindByStatus_ValidStatus_ShouldReturn200()
         {
-            var response = _petClient.FindByStatus("available");
+            var response = _petClient.FindByStatus(PetStatus.Available);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -100,5 +103,7 @@ namespace PetStoreTests.Tests
             
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
+
+        public void Dispose() => _petClient.Dispose();
     }
 }

@@ -18,17 +18,11 @@ namespace PetStoreTests.Utilities
             response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
         }
 
-        public static void ShouldBeSuccess(RestResponse response)
-        {
-            ((int)response.StatusCode).Should().BeInRange(200, 299);
-        }
-
         public static void ShouldBeDeletedOrNotFound(RestResponse response)
         {
             response.StatusCode.Should().BeOneOf(
                 HttpStatusCode.OK,          // Deleted Successfully
-                HttpStatusCode.NotFound,    // Already deleted / never existed
-                HttpStatusCode.BadRequest   // Invalid ID supplied
+                HttpStatusCode.NotFound     // Already deleted / never existed
                 );
         }
     }

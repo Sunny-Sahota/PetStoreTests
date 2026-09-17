@@ -1,7 +1,9 @@
 ﻿using PetStoreTests.Clients;
 using PetStoreTests.Models;
 using PetStoreTests.Utilities;
+using RestSharp;
 using System.Net;
+using WireMock.ResponseBuilders;
 
 namespace PetStoreTests.Actions
 {
@@ -9,6 +11,8 @@ namespace PetStoreTests.Actions
     {
         // Business Action Layer 
         private readonly PetClient _petClient;
+
+        private static bool hasOkayResponseWithBody(RestResponse r) => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content);
 
         public PetActions(PetClient petClient)
         {
@@ -19,7 +23,7 @@ namespace PetStoreTests.Actions
         {
             var response = RetryHelper.RetryUntil(
                 action: () => _petClient.PostPet(pet),
-                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content),
+                condition: hasOkayResponseWithBody,
                 context: $"POST /pet (id: {pet.Id})"
             );
             return JsonHelper.DeserializeOrThrow<Pet>(response.Content);
@@ -29,7 +33,7 @@ namespace PetStoreTests.Actions
         {
             var response = RetryHelper.RetryUntil(
                 action: () => _petClient.GetPetById(id),
-                condition: r => r.StatusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(r.Content),
+                condition: hasOkayResponseWithBody,
                 context: $"GET/pet/{id}"
             );
             return JsonHelper.DeserializeOrThrow<Pet>(response.Content);

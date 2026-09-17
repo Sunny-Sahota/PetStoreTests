@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace PetStoreTests.Clients
 {
-    public class PetClient
+    public class PetClient : IDisposable
     {
         // Raw HTTP communication
         private readonly RestClient _restClient;
@@ -42,5 +42,7 @@ namespace PetStoreTests.Clients
             request.AddFile("file",file,"test-image.png");
             return _restClient.Execute(request);   
         }
+
+        public void Dispose() => _restClient.Dispose();
     }
 }

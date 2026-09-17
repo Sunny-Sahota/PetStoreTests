@@ -29,6 +29,7 @@ namespace PetStoreTests.Tests
 
             // ACT
             var createdPet = _petAction.CreatePet(pet);
+            TrackPet(pet.Id);
             var fetchedPet = _petAction.GetPet(pet.Id);
              
             // ASSERT
@@ -46,19 +47,20 @@ namespace PetStoreTests.Tests
             var pet = TestDataFactory.CreatePet();
 
             // CREATE
-            var createdPet = _petAction.CreatePet(pet);
+            _petAction.CreatePet(pet);
+            TrackPet(pet.Id);
 
             // READ (with retry - still fine via helper)
             var fetchedPet = _petAction.GetPet(pet.Id);
             fetchedPet.Id.Should().Be(pet.Id);
 
             // UPDATE
-            pet.Name = "UpdatedPet";
+            pet.Name = TestDataFactory.UpdatedPetName;
             ApiAssertions.ShouldBeOk(PetClient.PutPet(pet));
 
             // VERIFY UPDATE (via service layer)
-            var updatedPet = _petService.WaitForPetNameToBe(pet.Id, "UpdatedPet");
-            updatedPet.Name.Should().Be("UpdatedPet");
+            var updatedPet = _petService.WaitForPetNameToBe(pet.Id, TestDataFactory.UpdatedPetName);
+            updatedPet.Name.Should().Be(TestDataFactory.UpdatedPetName);
 
             // DELETE
             ApiAssertions.ShouldBeDeletedOrNotFound(PetClient.DeletePet(pet.Id));
@@ -76,6 +78,7 @@ namespace PetStoreTests.Tests
 
             //  ACT
             var createdPet = _petAction.CreatePet(pet);
+            TrackPet(pet.Id);
             var fetchedPet = _petAction.GetPet(pet.Id);
 
             //  ASSERT
@@ -86,7 +89,7 @@ namespace PetStoreTests.Tests
             //  ASSERT
             fetchedPet.Category.Should().NotBeNull();
             fetchedPet.Category!.Id.Should().Be(1);
-            fetchedPet.Category!.Name.Should().Be("Dogs");
+            fetchedPet.Category!.Name.Should().Be(TestDataFactory.DefaultCategoryName);
 
             //  ASSERT
             fetchedPet.PhotoUrls.Should().BeEquivalentTo(["http://example.com/pic1.jpg"]);
@@ -94,7 +97,7 @@ namespace PetStoreTests.Tests
             //  ASSERT
             fetchedPet.Tags.Should().HaveCount(1);
             fetchedPet.Tags[0].Id.Should().Be(1);
-            fetchedPet.Tags[0].Name.Should().Be("friendly");
+            fetchedPet.Tags[0].Name.Should().Be(TestDataFactory.DefaultTagName);
         }
     }
 }

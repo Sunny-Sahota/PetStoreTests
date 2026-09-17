@@ -37,7 +37,7 @@ namespace PetStoreTests.Tests
                     .UsingPost())
                 .RespondWith(Response.Create()
                     .WithStatusCode("200")
-                    .WithBodyAsJson(new Pet { Id = 1, Name = "Mock", Status = "available" }));
+                    .WithBodyAsJson(new Pet { Id = 1, Name = "Mock", Status = PetStatus.Available }));
             
             // 3) PUT /pet -> 404 (pet with a mismatched id "does not exist")
             Server
@@ -84,8 +84,8 @@ namespace PetStoreTests.Tests
                     .WithStatusCode("200")
                     .WithBodyAsJson(new List<Pet>  
                     {
-                        new() { Id = 1, Name = "Mock", Status = "available" },
-                        new() { Id = 2, Name = "Mock2",Status = "available" }
+                        new() { Id = 1, Name = "Mock", Status = PetStatus.Available },
+                        new() { Id = 2, Name = "Mock2",Status = PetStatus.Available }
                     }));
 
             // 7) Strict schema: POST /pet whose name is empty, >200 chars, or not ASCII

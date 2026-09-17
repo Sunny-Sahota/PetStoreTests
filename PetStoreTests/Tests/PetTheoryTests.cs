@@ -21,9 +21,9 @@ namespace PetStoreTests.Tests
         //  The API accepts any status string; test that each one
         //  round-trips correctly (create → read).
         [Theory]
-        [InlineData("available")]
-        [InlineData("pending")]
-        [InlineData("sold")]
+        [InlineData(PetStatus.Available)]
+        [InlineData(PetStatus.Pending)]
+        [InlineData(PetStatus.Sold)]
         [Trait("Category","CRUD")]
         public void CreatePet_WithStatus_ShouldBeRoundTrip(string status)
         {
@@ -32,6 +32,7 @@ namespace PetStoreTests.Tests
             pet.Status = status;
             // ACT
             var createdPet = _petAction.CreatePet(pet);
+            TrackPet(pet.Id);
             var fetchedPet = _petAction.GetPet(pet.Id);
             // ASSERT
             createdPet.Status.Should().Be(status);
@@ -55,6 +56,7 @@ namespace PetStoreTests.Tests
             pet.Name = name;
             //  ACT
             var createdPet = _petAction.CreatePet(pet);
+            TrackPet(pet.Id);
             var fetchedPet = _petAction.GetPet(pet.Id);
             //  ASSERT
             createdPet.Name.Should().Be(name);

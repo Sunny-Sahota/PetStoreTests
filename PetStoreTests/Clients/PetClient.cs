@@ -8,9 +8,11 @@ namespace PetStoreTests.Clients
         // Raw HTTP communication
         private readonly RestClient _restClient;
 
-        public PetClient()
+        public PetClient() : this(ApiConfig.BaseUrl){}
+
+        public PetClient(string BaseUrl)
         {
-            _restClient = new RestClient(ApiConfig.BaseUrl);
+            _restClient = new RestClient(BaseUrl);
         }
 
         private RestResponse Execute(string resource,Method method,object? body = null)

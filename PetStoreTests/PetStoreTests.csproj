@@ -21,6 +21,7 @@
     <PackageReference Include="RestSharp" Version="114.0.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageReference Include="WireMock.Net" Version="2.15.0" />
   </ItemGroup>
 
   <ItemGroup>

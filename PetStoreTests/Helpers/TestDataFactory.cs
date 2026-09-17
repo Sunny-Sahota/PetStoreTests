@@ -15,5 +15,18 @@ namespace PetStoreTests.Helpers
                 Status = "available"
             };
         }
+
+        public static Pet CreateCompletePet()
+        {
+            return new Pet
+            {
+                Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * 1000 + Random.Shared.Next(0, 999),
+                Name = "TestPet",
+                Status = "available",
+                Category = new Category { Id = 1, Name = "Dogs" },
+                PhotoUrls = ["http://example.com/pic1.jpg"],
+                Tags = [new Tag { Id = 1, Name = "friendly" }]
+            };
+        }
     }
 }

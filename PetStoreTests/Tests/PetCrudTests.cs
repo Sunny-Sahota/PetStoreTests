@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel;
+using FluentAssertions;
 using PetStoreTests.Actions;
 using PetStoreTests.Clients;
 using PetStoreTests.Helpers;
@@ -20,6 +21,7 @@ namespace PetStoreTests.Tests
         }
 
         [Fact]
+        [Trait("Category","CRUD")]
         public void CreatePet_And_GetPet_ValidResponse()
         {
             // ARRANGE
@@ -38,6 +40,7 @@ namespace PetStoreTests.Tests
         }
 
         [Fact]
+        [Trait("Category","CRUD")]
         public void FullCrud_Pet_ShouldWork()
         {
             // ARRANGE
@@ -63,6 +66,39 @@ namespace PetStoreTests.Tests
 
             // VERIFY DELETE
             ApiAssertions.ShouldBeOkOrNotFound(_petClient.GetPetById(pet.Id));
+        }
+
+        [Fact]
+        [Trait("Category","CRUD")]
+        public void CreateAndGetPet_FullSchema_ShouldBeRoundTrip()
+        {
+            //  ARRANGE
+            var pet = TestDataFactory.CreateCompletePet();
+
+            //  ACT
+            var createdPet = _petAction.CreatePet(pet);
+            var fetchedPet = _petAction.GetPet(pet.Id);
+
+            //  ASSERT
+            createdPet.Id.Should().Be(pet.Id);
+            fetchedPet.Id.Should().Be(pet.Id);
+            fetchedPet.Name.Should().Be(pet.Name);
+
+            //  ASSERT
+            fetchedPet.Category.Should().NotBeNull();
+            fetchedPet.Category!.Id.Should().Be(1);
+            fetchedPet.Category!.Name.Should().Be("Dogs");
+
+            //  ASSERT
+            fetchedPet.PhotoUrls.Should().BeEquivalentTo(["http://example.com/pic1.jpg"]);
+
+            //  ASSERT
+            fetchedPet.Tags.Should().HaveCount(1);
+            fetchedPet.Tags[0].Id.Should().Be(1);
+            fetchedPet.Tags[0].Name.Should().Be("friendly");
+
+            //  CLEANUP
+            _petClient.DeletePet(pet.Id);
         }
     }
 }

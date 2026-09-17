@@ -67,5 +67,38 @@ namespace PetStoreTests.Tests
             secondDelete.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        [Trait("Category","Negative")]
+        public void FindByStatus_InvalidStatus_ShouldReturn400()
+        {
+            var response = _petClient.FindByStatus("bogus");
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        [Trait("Category","Negative")]
+        public void FindByStatus_ValidStatus_ShouldReturn200()
+        {
+            var response = _petClient.FindByStatus("available");
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("A very long name that exceeds normal length and is designed to test boundary handling in the API and should be at least a couple hundred characters to stress any name-length assumptions the server might make and still be accepted by the demo endpoint")]
+        [InlineData("!@#$%^&*()_+={}[]|\\:\";<>?,./`~")]
+        [InlineData("日本語テスト")]
+        [Trait("Category", "EdgeCase")]
+        public void CreatePet_EdgeCaseName_ShouldBeRejected(string name)
+        {
+            var pet = TestDataFactory.CreatePet();
+            pet.Name = name;
+
+            var response = _petClient.PostPet(pet);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
     }
 }

@@ -40,5 +40,11 @@ namespace PetStoreTests.Actions
             var response = _petClient.FindByStatus(status);
             return JsonHelper.DeserializeOrThrow<List<Pet>>(response.Content);
         }
+
+        public ApiResponse UploadImage(long id, string additionalMetadata, byte[] file)
+        {
+            var response = _petClient.UploadImage(id, additionalMetadata, file);
+            return JsonHelper.DeserializeOrThrow<ApiResponse>(response.Content);
+        }
     }
 }

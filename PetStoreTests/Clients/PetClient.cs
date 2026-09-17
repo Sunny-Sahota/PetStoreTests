@@ -32,5 +32,13 @@ namespace PetStoreTests.Clients
         public RestResponse DeletePet(long id) => Execute($"/pet/{id}", Method.Delete);
 
         public RestResponse FindByStatus(string status) => Execute($"/pet/findByStatus?status={status}", Method.Get);
+
+        public RestResponse UploadImage(long Id, string additionalMetaData, byte[] file)
+        {
+            var request = new RestRequest($"/pet/{Id}/uploadImage",Method.Post);
+            request.AddParameter("additionalMetadata",additionalMetaData);
+            request.AddFile("file",file,"test-image.png");
+            return _restClient.Execute(request);   
+        }
     }
 }

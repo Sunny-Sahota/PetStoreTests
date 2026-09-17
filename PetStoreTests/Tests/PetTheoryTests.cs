@@ -3,18 +3,18 @@ using PetStoreTests.Actions;
 using PetStoreTests.Clients;
 using PetStoreTests.Helpers;
 using PetStoreTests.Models;
+using PetStoreTests.Utilities;
 using System.Net;
 
 namespace PetStoreTests.Tests
 {
-    public class PetTheoryTests
+    public class PetTheoryTests : ApiTestBase
     {
-        private readonly PetClient _petClient = new ();
         private readonly PetActions _petAction;
 
         public PetTheoryTests()
         {
-            _petAction = new PetActions(_petClient);
+            _petAction = new PetActions(PetClient);
         }
 
         //  Status parameterized tests
@@ -24,7 +24,7 @@ namespace PetStoreTests.Tests
         [InlineData("available")]
         [InlineData("pending")]
         [InlineData("sold")]
-        [Trait("Category","Theory")]
+        [Trait("Category","CRUD")]
         public void CreatePet_WithStatus_ShouldBeRoundTrip(string status)
         {
             // ARRANGE
@@ -36,8 +36,6 @@ namespace PetStoreTests.Tests
             // ASSERT
             createdPet.Status.Should().Be(status);
             fetchedPet.Status.Should().Be(status);
-            // CLEANUP
-            _petClient.DeletePet(pet.Id);
         }
 
         //  Edge-case name tests
@@ -49,7 +47,7 @@ namespace PetStoreTests.Tests
         [InlineData("A very long name that exceeds normal length and is designed to test boundary handling in the API and should be at least a couple hundred characters to stress any name-length assumptions the server might make and still be accepted by the demo endpoint")] // long name
         [InlineData("!@#$%^&*()_+={}[]|\\:\";<>?,./`~")]           // special chars
         [InlineData("日本語テスト")]                                  // unicode
-        [Trait("Category", "Theory")]
+        [Trait("Category", "EdgeCase")]
         public void CreatePet_WithEdgeCaseName_ShouldSucceed(string name)
         {
             //  ARRANGE
@@ -61,8 +59,6 @@ namespace PetStoreTests.Tests
             //  ASSERT
             createdPet.Name.Should().Be(name);
             fetchedPet.Name.Should().Be(name);
-            //  CLEANUP
-            _petClient.DeletePet(pet.Id);
         }
     }
 }

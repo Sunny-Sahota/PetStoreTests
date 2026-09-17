@@ -2,17 +2,17 @@ using FluentAssertions;
 using PetStoreTests.Actions;
 using PetStoreTests.Clients;
 using PetStoreTests.Helpers;
+using PetStoreTests.Utilities;
 
 namespace PetStoreTests.Tests
 {
-    public class PetUploadTests
+    public class PetUploadTests : ApiTestBase
     {
-        private readonly PetClient _petClient = new();
         private readonly PetActions _petAction;
 
         public PetUploadTests()
         {
-            _petAction = new PetActions(_petClient);
+            _petAction = new PetActions(PetClient);
         }
 
         [Fact]
@@ -33,9 +33,6 @@ namespace PetStoreTests.Tests
             //  ASSERT
             response.Code.Should().Be(200);
             response.Message.Should().NotBeNullOrEmpty();
-
-            //  CLEANUP
-            _petClient.DeletePet(pet.Id);
         }
     }
 }

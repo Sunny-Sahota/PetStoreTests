@@ -8,16 +8,15 @@ using PetStoreTests.Utilities;
 
 namespace PetStoreTests.Tests
 {
-    public class PetCrudTests
+    public class PetCrudTests : ApiTestBase
     {
-        private readonly PetClient _petClient = new();
         private readonly PetService _petService;
         private readonly PetActions _petAction;
 
         public PetCrudTests()
         {
-            _petService = new PetService(_petClient);
-            _petAction = new PetActions(_petClient);
+            _petService = new PetService(PetClient);
+            _petAction = new PetActions(PetClient);
         }
 
         [Fact]
@@ -55,17 +54,17 @@ namespace PetStoreTests.Tests
 
             // UPDATE
             pet.Name = "UpdatedPet";
-            ApiAssertions.ShouldBeOk(_petClient.PutPet(pet));
+            ApiAssertions.ShouldBeOk(PetClient.PutPet(pet));
 
             // VERIFY UPDATE (via service layer)
             var updatedPet = _petService.WaitForPetNameToBe(pet.Id, "UpdatedPet");
             updatedPet.Name.Should().Be("UpdatedPet");
 
             // DELETE
-            ApiAssertions.ShouldBeDeletedOrNotFound(_petClient.DeletePet(pet.Id));
+            ApiAssertions.ShouldBeDeletedOrNotFound(PetClient.DeletePet(pet.Id));
 
             // VERIFY DELETE
-            ApiAssertions.ShouldBeOkOrNotFound(_petClient.GetPetById(pet.Id));
+            ApiAssertions.ShouldBeOkOrNotFound(PetClient.GetPetById(pet.Id));
         }
 
         [Fact]
@@ -96,9 +95,6 @@ namespace PetStoreTests.Tests
             fetchedPet.Tags.Should().HaveCount(1);
             fetchedPet.Tags[0].Id.Should().Be(1);
             fetchedPet.Tags[0].Name.Should().Be("friendly");
-
-            //  CLEANUP
-            _petClient.DeletePet(pet.Id);
         }
     }
 }

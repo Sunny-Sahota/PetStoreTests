@@ -1,18 +1,21 @@
 using FluentAssertions;
 using PetStoreTests.Actions;
-using PetStoreTests.Clients;
+using PetStoreTests.Helpers;
 using PetStoreTests.Models;
+using PetStoreTests.Services;
+using PetStoreTests.Utilities;
 
 namespace PetStoreTests.Tests
 {
-    public class PetFilterTests : IDisposable
+    public class PetFilterTests : ApiTestBase
     {
-        private readonly PetClient _petClient = new();
         private readonly PetActions _petAction;
+        private readonly PetService _petService;
 
         public PetFilterTests()
         {
-            _petAction = new PetActions(_petClient);
+            _petAction = new PetActions(PetClient);
+            _petService = new PetService(PetClient);
         }
 
         [Fact]
@@ -24,18 +27,19 @@ namespace PetStoreTests.Tests
 
             foreach(var status in statuses)
             {
-                //  ACT
-                var pets = _petAction.FindByStatus(status);
+                var pet = TestDataFactory.CreatePet(status);
+                _petAction.CreatePet(pet);
+                TrackPet(pet.Id);
 
-                //  ASSERT - loose for shared API
-                pets.Should().NotBeNull();
-                pets.Should().NotBeEmpty();
+                //  ACT - wait for the created pet to appear in the search results
+                var pets = _petService.WaitForPetInStatusSearch(pet.Id, status);
+
+                //  ASSERT - self-seeded so we don't depend on the shared API's data
+                pets.Should().Contain(p => p.Id == pet.Id);
 
                 //  Every Returned pet should match the requested status
                 pets.Should().OnlyContain(p => p.Status == status);
             }
         }
-
-        public void Dispose() => _petClient.Dispose();
     }
 }

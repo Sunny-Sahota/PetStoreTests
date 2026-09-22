@@ -25,5 +25,16 @@ namespace PetStoreTests.Services
                 context: $"GET /pet/{id} - waiting for pet name to be '{expectedName}'"
             )!;
         }
+
+        public List<Pet> WaitForPetInStatusSearch(long id, string status)
+        {
+            return RetryHelper.RetryUntil(
+                action: () => JsonHelper.DeserializeOrThrow<List<Pet>>(_petClient.FindByStatus(status).Content),
+                condition: pets => pets != null && pets.Any(p => p.Id == id),
+                retries: 10,
+                delayMs: 500,
+                context: $"GET /pet/findByStatus?status={status} - waiting for pet {id}"
+            )!;
+        }
     }
 }

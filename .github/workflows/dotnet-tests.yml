@@ -37,8 +37,12 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --configuration Release --settings coverlet.runsettings --verbosity normal
 
+      - name: Enforce coverage threshold 
+        run: python3 scripts/enforce-code-coverage.py --threshold 0.60
+
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: coverage
           path: '**/TestResults/**/coverage.cobertura.xml'

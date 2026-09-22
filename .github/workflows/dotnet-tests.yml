@@ -35,7 +35,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --verbosity normal
+        run: dotnet test --no-build --configuration Release --settings coverlet.runsettings --verbosity normal
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4

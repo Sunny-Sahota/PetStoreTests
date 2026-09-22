@@ -3,7 +3,6 @@ using PetStoreTests.Models;
 using PetStoreTests.Utilities;
 using RestSharp;
 using System.Net;
-using WireMock.ResponseBuilders;
 
 namespace PetStoreTests.Actions
 {
@@ -41,7 +40,12 @@ namespace PetStoreTests.Actions
 
         public List<Pet> FindByStatus(string status)
         {
-            var response = _petClient.FindByStatus(status);
+            var response = RetryHelper.RetryUntil(
+                action: () =>_petClient.FindByStatus(status),
+                condition: r => r.StatusCode == HttpStatusCode.OK && r.Content?.TrimStart().StartsWith('[') == true,
+                context: $"GET /pet/findByStatus?status={status}"
+            );
+
             return JsonHelper.DeserializeOrThrow<List<Pet>>(response.Content);
         }
 

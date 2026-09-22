@@ -40,6 +40,15 @@ jobs:
       - name: Enforce coverage threshold 
         run: python3 scripts/enforce-code-coverage.py --threshold 0.60
 
+      - name: Generate coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.10
+        with:
+          reports: 'PetStoreTests/TestResults/**/coverage.cobertura.xml'
+          targetdir: 'coveragereport'
+          reporttypes: 'HtmlInline_AzurePipelines;Badges'
+          sourcedirs: 'PetStoreTests'
+          title: 'PetStore Tests Coverage'
+
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         if: always()
@@ -47,3 +56,21 @@ jobs:
           name: coverage
           path: '**/TestResults/**/coverage.cobertura.xml'
           if-no-files-found: warn
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coveragereport
+          if-no-files-found: warn
+
+      - name: Publish coverage badge
+        run: |
+          mkdir -p badges
+          cp coveragereport/badge_linecoverage.svg badges/coverage.svg
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add badges/coverage.svg
+          git diff --cached --quiet || git commit -m "Update coverage badge [skip ci]"
+          git push origin HEAD:master

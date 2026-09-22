@@ -1,5 +1,7 @@
 ﻿# PetStore API Test Automation (C#)
 
+[![Coverage](https://raw.githubusercontent.com/Sunny-Sahota/PetStoreTests/master/badges/coverage.svg)]
+
 ## Overview
 
 This project demonstrates an automated API testing framework built in **C#** to validate CRUD operations against the Swagger PetStore API.

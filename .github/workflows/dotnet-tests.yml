@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      checks: write
 
     steps:
       - name: Checkout repository
@@ -48,6 +49,16 @@ jobs:
             **/TestResults/**/*.trx
             **/TestResults/**/junit-results.xml
           if-no-files-found: warn
+
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results
+          path: '**/TestResults/**/*.trx'
+          reporter: dotnet-trx
+          list-suites: failed
+          list-tests: failed
 
       - name: Enforce coverage threshold 
         run: python3 scripts/enforce-code-coverage.py --threshold 0.60

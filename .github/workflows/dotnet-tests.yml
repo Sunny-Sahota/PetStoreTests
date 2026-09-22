@@ -36,8 +36,18 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run tests
-        run: dotnet test --no-build --configuration Release --settings coverlet.runsettings --verbosity normal
+      - name: Run tests and collect coverage
+        run: dotnet test --no-build --configuration Release --settings coverlet.runsettings --logger "trx;LogFileName=trx-results.trx" --logger "junit;LogFileName=junit-results.xml" --verbosity normal
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            **/TestResults/**/*.trx
+            **/TestResults/**/junit-results.xml
+          if-no-files-found: warn
 
       - name: Enforce coverage threshold 
         run: python3 scripts/enforce-code-coverage.py --threshold 0.60

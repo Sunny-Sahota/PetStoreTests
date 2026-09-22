@@ -16,15 +16,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
 
       - name: Cache NuGet packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('PetStoreTests.sln', '**/*.csproj') }}
@@ -41,7 +41,7 @@ jobs:
         run: dotnet test --no-build --configuration Release --settings coverlet.runsettings --logger "trx;LogFileName=trx-results.trx" --logger "junit;LogFileName=junit-results.xml" --verbosity normal
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: test-results
@@ -51,7 +51,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Publish test report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: always()
         with:
           name: Test Results
@@ -73,7 +73,7 @@ jobs:
           title: 'PetStore Tests Coverage'
 
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: coverage
@@ -81,7 +81,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: coverage-report

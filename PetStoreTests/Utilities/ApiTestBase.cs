@@ -1,6 +1,4 @@
 using PetStoreTests.Clients;
-using PetStoreTests.Models;
-using Xunit;
 
 namespace PetStoreTests.Utilities
 {

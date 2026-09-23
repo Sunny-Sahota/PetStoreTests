@@ -17,7 +17,7 @@ namespace PetStoreTests.Helpers
             return new Pet
             {
                 Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * 1000 + Random.Shared.Next(0, 999),
-                Name = "TestPet",
+                Name = DefaultPetName,
                 Status = status
             };
         }
@@ -27,11 +27,11 @@ namespace PetStoreTests.Helpers
             return new Pet
             {
                 Id = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() * 1000 + Random.Shared.Next(0, 999),
-                Name = "TestPet",
-                Status = "available",
-                Category = new Category { Id = 1, Name = "Dogs" },
+                Name = DefaultPetName,
+                Status = DefaultStatus,
+                Category = new Category { Id = 1, Name = DefaultCategoryName },
                 PhotoUrls = ["http://example.com/pic1.jpg"],
-                Tags = [new Tag { Id = 1, Name = "friendly" }]
+                Tags = [new Tag { Id = 1, Name = DefaultTagName }]
             };
         }
     }

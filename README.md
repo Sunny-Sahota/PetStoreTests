@@ -169,3 +169,9 @@ SDET / Test Automation Engineer
 [GitHub](https://github.com/Sunny-Sahota) · [LinkedIn](https://www.linkedin.com/in/sunny-sahota/)
 
 Passionate about clean and maintainable test automation that tells a story.
+
+---
+
+## License
+
+Distributed under the [MIT License](LICENSE).

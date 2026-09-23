@@ -1,7 +1,6 @@
 ﻿using Polly;
 using Polly.CircuitBreaker;
 using Polly.Retry;
-using SimMetrics.Net.Metric;
 
 namespace PetStoreTests.Utilities
 {

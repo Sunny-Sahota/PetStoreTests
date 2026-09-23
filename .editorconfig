@@ -1,0 +1,48 @@
+root = true
+
+# Core
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,json,xml,yml,yaml,md}]
+indent_style = space
+indent_size = 4
+
+# C#
+[*.cs]
+indent_size = 4
+dotnet_sort_system_directives_first = true
+csharp_style_var_when_type_is_apparent = true
+csharp_style_expression_bodied_methods = when_single_line
+csharp_style_namespace_declarations = block_scoped
+csharp_style_throw_expression = true
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+
+# Prefer target-typed new()
+csharp_style_implicit_object_creation_when_type_is_apparent = true
+
+# Private fields prefixed with underscore
+dotnet_naming_rule.private_fields_should_be_underscored.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_underscored.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_underscored.style = underscore_prefix
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.required_suffix =
+
+# Public members PascalCase
+dotnet_naming_rule.public_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.public_members_should_be_pascal_case.symbols = public_members
+dotnet_naming_rule.public_members_should_be_pascal_case.style = pascal_case
+dotnet_naming_symbols.public_members.applicable_kinds = property,method,event,class,struct,enum
+dotnet_naming_symbols.public_members.applicable_accessibilities = public
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = true

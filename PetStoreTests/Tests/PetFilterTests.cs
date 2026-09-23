@@ -4,6 +4,7 @@ using PetStoreTests.Helpers;
 using PetStoreTests.Models;
 using PetStoreTests.Services;
 using PetStoreTests.Utilities;
+using Xunit.Abstractions;
 
 namespace PetStoreTests.Tests
 {
@@ -12,7 +13,7 @@ namespace PetStoreTests.Tests
         private readonly PetActions _petAction;
         private readonly PetService _petService;
 
-        public PetFilterTests()
+        public PetFilterTests(ITestOutputHelper output) : base(output)
         {
             _petAction = new PetActions(PetClient);
             _petService = new PetService(PetClient);

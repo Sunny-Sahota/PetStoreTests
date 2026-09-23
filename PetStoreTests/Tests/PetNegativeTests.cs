@@ -1,13 +1,18 @@
 using FluentAssertions;
 using PetStoreTests.Clients;
+using PetStoreTests.Config;
 using System.Net;
+using Xunit.Abstractions;
 namespace PetStoreTests.Tests
 {
     public class PetNegativeTests : IDisposable
     {
-        private readonly PetClient _petClient = new();
+        private readonly PetClient _petClient;
 
-        public PetNegativeTests() { }
+        public PetNegativeTests(ITestOutputHelper output)
+        {
+            _petClient = new PetClient(ApiConfig.BaseUrl, line => output.WriteLine(line));
+        }
 
         [Fact]
         [Trait("Category","Negative")]

@@ -114,7 +114,7 @@ Tests are grouped with xUnit categories (`CRUD`, `Filter`, `Upload`, `Negative`,
 
 ## Retry Strategy
 
-Polls against the live shared API are wrapped in a reusable `RetryHelper` to handle:
+Polls against the live shared API are wrapped in a reusable `RetryHelper` (built on a Polly v8 resilience pipeline with retry + circuit breaker) to handle:
 
 * **Eventual consistency** — writes may take a moment to be visible to reads (`GET /pet/{id}`, `findByStatus`)
 * **Delayed API updates** — a pet name change is verified via polling until the new value is returned
@@ -134,6 +134,7 @@ Polls against the live shared API are wrapped in a reusable `RetryHelper` to han
 * **xUnit** – test framework (facts, theories, traits, fixtures)
 * **RestSharp** – HTTP client
 * **Newtonsoft.Json** – serialization
+* **Polly** – retry/circuit-breaker resilience for live-API polling
 * **FluentAssertions** – readable assertions
 * **WireMock.Net** – hermetic mock server for deterministic negative/edge-case tests
 * **Coverlet** – cross-platform code coverage (collected in CI)
@@ -151,13 +152,12 @@ Polls against the live shared API are wrapped in a reusable `RetryHelper` to han
 * Negative/schema tests are mocked with WireMock.Net so CI never depends on the live API's whims
 * CI publishes both TRX and JUnit results — a readable test report via `dorny/test-reporter`, plus downloadable artifacts for offline debugging
 * Tests written to reflect **business intent**
+* HTTP traffic is captured per-test via a delegating `HttpMessageHandler` and streamed to xUnit's `ITestOutputHelper` — failed tests automatically carry the full request/response exchange in CI artifacts for offline debugging
 
 ---
 
 ## Future Improvements
 
-* Add request/response logging for debugging failed runs in CI
-* Introduce Polly-based resilience to replace the polling loop
 * Cover additional API endpoints (e.g. `/store/inventory`, `/user`)
 
 ---

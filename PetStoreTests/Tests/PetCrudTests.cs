@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using FluentAssertions;
+﻿using FluentAssertions;
 using PetStoreTests.Actions;
-using PetStoreTests.Clients;
 using PetStoreTests.Helpers;
 using PetStoreTests.Services;
 using PetStoreTests.Utilities;
+using Xunit.Abstractions;
 
 namespace PetStoreTests.Tests
 {
@@ -13,7 +12,7 @@ namespace PetStoreTests.Tests
         private readonly PetService _petService;
         private readonly PetActions _petAction;
 
-        public PetCrudTests()
+        public PetCrudTests(ITestOutputHelper output) : base(output)
         {
             _petService = new PetService(PetClient);
             _petAction = new PetActions(PetClient);

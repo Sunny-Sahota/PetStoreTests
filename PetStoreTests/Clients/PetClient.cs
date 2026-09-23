@@ -1,4 +1,5 @@
 ﻿using PetStoreTests.Config;
+using PetStoreTests.Utilities;
 using RestSharp;
 
 namespace PetStoreTests.Clients
@@ -8,14 +9,27 @@ namespace PetStoreTests.Clients
         // Raw HTTP communication
         private readonly RestClient _restClient;
 
-        public PetClient() : this(ApiConfig.BaseUrl){}
+        public PetClient() : this(ApiConfig.BaseUrl) { }
 
-        public PetClient(string BaseUrl)
+        public PetClient(string baseUrl) : this(baseUrl, log: null) { }
+
+        // Optional logging: wraps RestSharp's handler so every exchange is captured.
+        public PetClient(string baseUrl, Action<string>? log)
         {
-            _restClient = new RestClient(BaseUrl);
+            if (log is null)
+            {
+                _restClient = new RestClient(baseUrl);
+                return;
+            }
+
+            var options = new RestClientOptions(baseUrl)
+            {
+                ConfigureMessageHandler = handler => new LoggingHttpMessageHandler(handler, log)
+            };
+            _restClient = new RestClient(options);
         }
 
-        private RestResponse Execute(string resource,Method method,object? body = null)
+        private RestResponse Execute(string resource, Method method, object? body = null)
         {
             var request = new RestRequest(resource, method);
 
@@ -37,10 +51,10 @@ namespace PetStoreTests.Clients
 
         public RestResponse UploadImage(long Id, string additionalMetaData, byte[] file)
         {
-            var request = new RestRequest($"/pet/{Id}/uploadImage",Method.Post);
-            request.AddParameter("additionalMetadata",additionalMetaData);
-            request.AddFile("file",file,"test-image.png");
-            return _restClient.Execute(request);   
+            var request = new RestRequest($"/pet/{Id}/uploadImage", Method.Post);
+            request.AddParameter("additionalMetadata", additionalMetaData);
+            request.AddFile("file", file, "test-image.png");
+            return _restClient.Execute(request);
         }
 
         public void Dispose() => _restClient.Dispose();

@@ -7,6 +7,10 @@ on:
     branches: [ master ]
   workflow_dispatch:   # Enables manual run from GitHub UI
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
